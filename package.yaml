@@ -1,0 +1,27 @@
+name: dhall-check
+version: 0.1.0.0
+synopsis: Check all dhall files in a project
+github: anfelor/dhall-check
+homepage: https://github.com/anfelor/dhall-check#readme
+license: BSD3
+license-file: LICENSE
+author: Anton Felix Lorenzen
+maintainer: anfelor@posteo.de
+copyright: BSD3
+category: Development
+
+dependencies:
+  - base >= 4.7 && < 5
+  - bytestring
+  - containers
+  - directory
+  - dhall
+  - filepath
+  - fsnotify
+  - trifecta
+  - text
+
+executables:
+  dhall-check:
+    source-dirs:      src
+    main:             Main.hs
