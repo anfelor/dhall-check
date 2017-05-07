@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           dhall-check
-version:        1.0.0.1
+version:        1.1.0.0
 synopsis:       Check all dhall files in a project
 category:       Development
 homepage:       https://github.com/anfelor/dhall-check#readme
