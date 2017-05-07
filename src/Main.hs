@@ -100,7 +100,7 @@ main = do
         Left e -> putStrLn $ displayException (e :: CheckException)
         Right v -> pure v
 
-    isDhallFile f = (flip elem [".dhall", ".dh"] . takeExtension . eventPath) f
+    isDhallFile f = ((==".dh") . takeExtension . eventPath) f
                  && (not . (==) '.' . head . takeFileName . eventPath) f
 
 
@@ -140,7 +140,7 @@ allTypeDefs dir = do
 -- | Get all a list of all dhall files in the given directory using absolute paths.
 allDhallFiles :: FilePath -> IO [(FilePath, Expr Src X)]
 allDhallFiles dir = do
-  files <- allFiles dir [".dh", ".dhall"]
+  files <- allFiles dir [".dh"]
   forM files $ \f -> do
     sequence (f, loadFile f)
 
