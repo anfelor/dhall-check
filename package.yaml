@@ -1,6 +1,7 @@
 name: dhall-check
-version: 0.1.0.0
+version: 1.0.0.1
 synopsis: Check all dhall files in a project
+description: 
 github: anfelor/dhall-check
 homepage: https://github.com/anfelor/dhall-check#readme
 license: BSD3
@@ -12,8 +13,7 @@ category: Development
 
 dependencies:
   - base >= 4.7 && < 5
-  - bytestring
-  - containers
+  - containers 
   - directory
   - dhall
   - filepath

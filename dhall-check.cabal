@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           dhall-check
-version:        0.1.0.0
+version:        1.0.0.1
 synopsis:       Check all dhall files in a project
 category:       Development
 homepage:       https://github.com/anfelor/dhall-check#readme
@@ -26,7 +26,6 @@ executable dhall-check
       src
   build-depends:
       base >= 4.7 && < 5
-    , bytestring
     , containers
     , directory
     , dhall
