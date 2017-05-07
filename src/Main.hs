@@ -73,9 +73,7 @@ main = do
   printExceptions $ do
     typedefs <- allTypeDefs here
     dhallfiles <- allDhallFiles here
-    printExceptions $ do
-      checkAll typedefs dhallfiles
-      putStrLn "No errors."
+    forM_ dhallfiles $ printExceptions . checkFile typedefs
     putStrLn "Watching for changes.."
     withManager $ \mgr -> do
       watchTree mgr here isDhallFile $ \event -> do
@@ -180,8 +178,3 @@ checkFile types (f, expr) = do
       case typeOf annot of
         Left err -> throwIO $ TypeChecking f err
         Right _ -> pure ()
-
-
--- | Perform 'checkFile' on every file in the Foldable.
-checkAll :: Foldable t => Map DhallType (Expr Src X) -> t (FilePath, Expr Src X) -> IO ()
-checkAll types = mapM_ (checkFile types)
