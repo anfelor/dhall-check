@@ -40,13 +40,17 @@ dhallType = DhallType . map toLower
 -- >>> dhallTypeOf "file.entry.dh"
 -- DhallType "entry"
 dhallTypeOf :: FilePath -> DhallType
-dhallTypeOf = DhallType . tail . map toLower . takeExtension . dropExtension
+dhallTypeOf f =
+  case takeExtension . dropExtension $ f of
+    "" -> throw $ WithoutType f
+    (_:xs) -> DhallType . map toLower $ xs
 
 
 data CheckException
   = CouldntFindTypeDefs
   | ParseException FilePath ParseError
   | UnknownType FilePath DhallType
+  | WithoutType FilePath
   | TypeChecking FilePath (TypeError Src)
   deriving (Show)
 
@@ -59,6 +63,8 @@ instance Exception CheckException where
     "While parsing " ++ f ++ ":" ++ displayException pe
   displayException (TypeChecking f te) =
     "While type checking " ++ f ++ ":" ++ displayException te
+  displayException (WithoutType f) =
+    "The file " ++ f ++ " seems to have no type associated with it."
 
 
 main :: IO ()
@@ -67,11 +73,10 @@ main = do
   printExceptions $ do
     typedefs <- allTypeDefs here
     dhallfiles <- allDhallFiles here
-    -- Check all files once
     printExceptions $ do
       checkAll typedefs dhallfiles
       putStrLn "No errors."
-    -- and then watch for changes
+    putStrLn "Watching for changes.."
     withManager $ \mgr -> do
       watchTree mgr here isDhallFile $ \event -> do
         case event of
@@ -149,7 +154,9 @@ loadFile f = do
   content <- TLIO.readFile f
   case exprFromText delta content of
     Left e -> throwIO $ ParseException f e
-    Right e -> load e
+    Right e -> do
+      setCurrentDirectory (takeDirectory f)
+      load e
 
 
 -- | Typecheck a single file against one of the given types.
